@@ -1,0 +1,97 @@
+<odoo>
+    <data>
+           <record model="ir.ui.view" id="inherit_quality_point_fields">
+            <field name="name">quality point field</field>
+            <field name="model">quality.point</field>
+            <field name="inherit_id" ref="quality.quality_point_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+<!--                <field name="product_tmpl"/>-->
+                     <attribute name="invisible">1</attribute>
+                </xpath>
+                   <xpath expr="//field[@name='title']" position="after">
+                <field name="product_tmpl"/>
+                </xpath>
+            </field>
+           </record>
+
+
+
+        <record model="ir.ui.view" id="inherit_stock_fields">
+            <field name="name">quality checks field</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_stock_move_nosuggest_operations"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="accepted"  readonly="1"/>
+                    <field name="rejected"  readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="inherit_boolean_field">
+            <field name="name">attachments fields</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_ids_without_package']//tree/field[@name='product_uom_qty']" position="before">
+                    <field name="line_check" invisible="1"/>
+                    <field name="accepted" attrs="{'invisible': [('line_check','=', False)]}"/>
+                    <field name="rejected" attrs="{'invisible': [('line_check','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '=', 'confirmed')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="purchase_doc" attrs="{'readonly': [('state', 'not in', ['draft','confirmed'])],'invisible': [('check_doc','!=',True)]}"/>
+                    <field name="fabric_lab_certificate" attrs="{'readonly': [('state', 'not in', ['draft','confirmed'])],'invisible': [('check_doc','!=',True)]}"/>
+                    <field name="wire_mill_certificate" attrs="{'readonly': [('state', 'not in', ['draft','confirmed'])],'invisible': [('check_doc','!=',True)]}"/>
+                    <field name="check" invisible="1"/>
+                    <field name="check_doc" invisible="1"/>
+                </xpath>
+                <xpath expr="//header/field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" string="confirm"
+                           statusbar_visible="draft,confirmed,qc_inspection,assigned,done,cancel"/>
+                </xpath>
+                <xpath expr="//header/button[@name='button_validate']" position="before">
+                    <button name="confirm_button" type="object" string="Confirm" class="oe_highlight"
+                            states="confirmed"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_toggle_is_locked']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_validate']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('state', '!=', 'assigned')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="inherit_quality_fields">
+            <field name="name">quality checks field</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="quality_control.stock_picking_view_form_inherit_quality"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='check_quality']" position="before">
+                    <button name="confirm_my_button" type="object" string="Confirm" class="oe_highlight"
+                            attrs="{'invisible': ['|',('check','!=',True), ('state','!=','qc_inspection')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='check_quality']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('check','!=',False),('state', '!=', 'qc_inspection')]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_validate'][hasclass('o_btn_validate')]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_validate'][hasclass('o_btn_validate')]" position="before">
+                    <button name="button_quality_alert" invisible="1" type="object" string="Quality Alert"/>
+                </xpath>
+                <xpath expr="//button[@name='button_quality_alert']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!--        button string="Quality Checks" name="check_quality" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('quality_check_todo', '=', False), ('state', 'in', ('done', 'cancel'))]}" groups="quality.group_quality_user"/>-->
+                <!--                <button name="button_quality_alert" type="object" string="Quality Alert" context="{'default_picking_id': active_id}" class="oe_highlight" attrs="{'invisible': ['|', ('quality_check_fail', '=', False), ('quality_alert_count', '!=', 0)]}"/>-->
+                <!--                <button name="button_quality_alert" type="object" string="Quality Alert" context="{'default_picking_id': active_id}" attrs="{'invisible': ['|',('check_ids', '=', []), '&amp;', ('quality_check_fail', '=', True), ('quality_alert_count', '=', 0)]}"/>-->
+                <!--          -->
+            </field>
+        </record>
+
+    </data>
+</odoo>
