@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+        <record id="purchase_requisition_department_form_view" model="ir.ui.view">
+            <field name="name">hr.department.form.view</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="dest_location_id"/>
+                </xpath>
+            </field>
+        </record>
+        
+        
+        
+       <!-- <record id="view_allowed_department_requisition_users_form" model="ir.ui.view">
+            <field name="name">user_dept_restriction.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Allowed Dept" attrs="{'invisible': [('name', '==', 'Administrator')]}">
+                    <page string="Allowed Dept">
+                        <group>
+                            <field name="department_ids" String='Product Category Ristrict'/>
+                        </group>
+                        
+                    </page>
+                </notebook>
+            </field>
+        </record>  -->
+        
+        
+        
+        
+        
+        
+        
+    </data>
+</odoo>
