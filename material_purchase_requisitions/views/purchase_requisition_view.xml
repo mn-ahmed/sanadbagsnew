@@ -92,7 +92,7 @@
                                         <field name="uom" class="oe_no_button" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
                                         <!-- <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': [('requisition_type', '!=', 'purchase')],'invisible': [('parent.state', '=', 'draft')]}" widget="many2many_tags"/>
                                          -->
-                                          <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': ['|',('requisition_type', '!=', 'purchase')],'column_invisible':[('parent.state','=','draft')]}" widget="many2many_tags"/>
+                                          <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': [('requisition_type', '!=', 'purchase')],'column_invisible':[('parent.state','=','draft')]}" widget="many2many_tags"/>
                                     
                                     </tree>
                                 </field>
