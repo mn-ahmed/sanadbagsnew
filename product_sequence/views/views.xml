@@ -1,0 +1,69 @@
+<odoo>
+  <data>
+
+    <record id="view_product_form_inh" model="ir.ui.view">
+		<field name="name">product.product.form</field>
+		<field name="model">product.product</field>
+		<field name="inherit_id" ref="product.product_normal_form_view"/>
+		<field name="arch" type="xml">
+
+			<xpath expr="//field[@name='name']" position="after">
+				<h3><field name="product_seq"/></h3>
+            </xpath>
+
+			<xpath expr="//field[@name='barcode']" position="after">
+				<field name="item_code" readonly="1"/>
+				<field name="product_counter" invisible="0"/>
+            </xpath>
+        </field>
+    </record>
+
+	  <record id="view_product_template_form_inh" model="ir.ui.view">
+		<field name="name">product.template.form</field>
+		<field name="model">product.template</field>
+		<field name="inherit_id" ref="product.product_template_only_form_view"/>
+		<field name="arch" type="xml">
+
+			<xpath expr="//field[@name='name']" position="after">
+				<h3><field name="product_temp_seq"/></h3>
+            </xpath>
+
+        </field>
+    </record>
+
+	  <record id="sale_order_view_search_inherit" model="ir.ui.view">
+			<field name="name">sale.order.search.inherit.sale</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter"/>
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+					<field name="order_line" string="Item Code" filter_domain="[('order_line.product_id.item_code', 'ilike', self)]"/>
+					<!--                <field name="order_line" string="Finish No" filter_domain="[('order_line.product_id.item_code', 'ilike', self)]"/>-->
+				</xpath>
+			</field>
+		</record>
+
+		<record id="purchase_order_view_search_inherit" model="ir.ui.view">
+			<field name="name">purchase.order.search.inherit.sale</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@name='activities_overdue']" position="after">
+					<field name="order_line" string="Item Code" filter_domain="[('order_line.product_id.item_code', 'ilike', self)]"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="product_template_view_search_inherit" model="ir.ui.view">
+		<field name="name">product.product.search.inherit.sale</field>
+		<field name="model">product.product</field>
+		<field name="inherit_id" ref="product.product_search_form_view"/>
+		<field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="item_code" string="Item Code" filter_domain="[('item_code', 'ilike', self)]"/>
+            </xpath>
+		</field>
+	</record>
+
+  </data>
+</odoo>
