@@ -5,21 +5,21 @@ from odoo import models, fields, api, _
 from odoo.osv import expression
 
 
-class ProductTemplateinh(models.Model):
+class ProductTemplateInh(models.Model):
     _inherit = 'product.template'
 
-    product_temp_seq = fields.Char('Seq', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
+    product_temp_seq = fields.Char('Product Code', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
 
     @api.model
     def create(self, vals):
         if vals.get('product_temp_seq', _('New')) == _('New'):
             vals['product_temp_seq'] = self.env['ir.sequence'].next_by_code('product.template.sequence') or _('New')
-        result = super(ProductTemplateinh, self).create(vals)
+        result = super(ProductTemplateInh, self).create(vals)
         result.assign_sequence_in_variant()
         return result
 
     def write(self, vals):
-        res = super(ProductTemplateinh, self).write(vals)
+        res = super(ProductTemplateInh, self).write(vals)
         for rec in self:
             rec.assign_sequence_in_variant()
         return res
@@ -33,7 +33,7 @@ class ProductTemplateinh(models.Model):
         return
 
 
-class ProductProductinh(models.Model):
+class ProductProductInh(models.Model):
     _inherit = 'product.product'
 
     product_seq = fields.Char('Product Code', required=True, copy=False, readonly=True,
@@ -44,8 +44,6 @@ class ProductProductinh(models.Model):
     def compute_item_code(self):
         for rec in self:
             rec.item_code = str(rec.product_counter) #rec.product_tmpl_id.product_temp_seq +
-
-    #     return result
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
