@@ -10,11 +10,11 @@
 				<xpath expr="//field[@name='name']" position="after">
 					<h3><field name="product_seq"/></h3>
 				</xpath>
-
 				<xpath expr="//field[@name='barcode']" position="after">
 					<field name="item_code" readonly="1"/>
 					<field name="product_counter" invisible="0"/>
 				</xpath>
+
 			</field>
 		</record>
 
