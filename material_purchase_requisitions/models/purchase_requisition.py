@@ -250,16 +250,28 @@ class MaterialPurchaseRequisition(models.Model):
         except Exception as e:
             print(e) 
             raise e
-        
+
     def compute_pick_count(self):
         for rec in self:
-            order_count=self.env['stock.picking'].search_count([('origin', '=', rec.name)])
-            rec.picking_count = order_count
-    
+            order_count=self.env['stock.picking'].search_count([('custom_requisition_id.id', '=', rec.id)])
+            if order_count >= 1:
+                rec.picking_count = order_count
+            else:
+                rec.picking_count =0
     def compute_po_count(self):
         for rec in self:
-            order_count=self.env['purchase.order'].search_count([('origin', '=', rec.name)])
+            order_count=self.env['purchase.order'].search_count([('custom_requisition_id.id', '=', rec.id)])
             rec.po_count = order_count
+        
+    # def compute_pick_count(self):
+    #     for rec in self:
+    #         order_count=self.env['stock.picking'].search_count([('origin', '=', rec.name)])
+    #         rec.picking_count = order_count
+    #
+    # def compute_po_count(self):
+    #     for rec in self:
+    #         order_count=self.env['purchase.order'].search_count([('origin', '=', rec.name)])
+    #         rec.po_count = order_count
     
     @api.model
     def create(self, vals):
