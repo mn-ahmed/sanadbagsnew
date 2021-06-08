@@ -23,9 +23,10 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/views.xml',
         'views/sequence.xml',
+        'wizard/attribute_wizard.xml',
     ],
 
 }

@@ -5,10 +5,33 @@ from odoo import models, fields, api, _
 from odoo.osv import expression
 
 
+class ProductTemplateAttributeInh(models.Model):
+    _inherit = 'product.template.attribute.line'
+
+    is_created = fields.Boolean()
+
+    @api.model
+    def create(self, vals):
+        result = super(ProductTemplateAttributeInh, self).create(vals)
+        result.is_created = True
+        return result
+
+
 class ProductTemplateInh(models.Model):
     _inherit = 'product.template'
 
     product_temp_seq = fields.Char('Product Code', required=True, copy=False, index=True, readonly=True, default=lambda self: _('New'))
+
+
+    def action_show_attribute_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Select Attributes',
+            'view_id': self.env.ref('product_sequence.view_attribute_wizard_form', False).id,
+            'target': 'new',
+            'res_model': 'product.attribute.wizard',
+            'view_mode': 'form',
+        }
 
     @api.model
     def create(self, vals):
