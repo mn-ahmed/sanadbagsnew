@@ -51,7 +51,7 @@
 					<attribute name="attrs">{'readonly': [('is_created', '=', True)]}</attribute>
 				</xpath>
 				<xpath expr="//page[@name='variants']/field[@name='attribute_line_ids']" position="before">
-					<button string="Add Attribute" type="object" name="action_show_attribute_wizard"/>
+					<button string="Add Value to Attribute" type="object" name="action_show_attribute_wizard"/>
 				</xpath>
 
 			</field>

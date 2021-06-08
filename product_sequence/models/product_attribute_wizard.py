@@ -21,6 +21,17 @@ class ProductAttributeWizard(models.TransientModel):
                 rec.update({
                     'value_ids': att_list,
                 })
+        self.assign_sequence_in_variant()
+
+    def assign_sequence_in_variant(self):
+        model = self.env.context.get('active_model')
+        rec_model = self.env[model].browse(self.env.context.get('active_id'))
+        count = 0
+        for variant in rec_model.product_variant_ids:
+            count += 1
+            variant.product_seq = str(00) + str(00) + str(0) + str(count)
+            variant.item_code = rec_model.product_temp_seq + variant.product_seq
+        return
     # @api.onchange('sale_id')
     # def onchange_sale_id(self):
     #     for res in self:
