@@ -81,6 +81,7 @@ class AccountPaymentInh(models.Model):
     received_by = fields.Char(string='Received By')
     approved_by = fields.Char(string='Paid by')
     po_number = fields.Char(string='PO Number')
+    memo = fields.Char(string='Memo')
 
     def get_amount_in_words(self,amount):
         amount_in_words = self.currency_id.amount_to_text(amount)

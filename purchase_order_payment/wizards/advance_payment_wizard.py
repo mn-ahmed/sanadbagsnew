@@ -8,12 +8,13 @@ class AdvancePaymentWizard(models.TransientModel):
     _description = 'Advance Payment'
 
     amount = fields.Float('Advance Amount')
-    order_amount = fields.Float('Order Amount')
+    order_amount = fields.Float(string='Order Amount')
     user_id = fields.Many2one('res.users')
     branch_id = fields.Many2one('res.branch')
-    wiz_date= fields.Date('Date')
+    wiz_date= fields.Date('Date', default=datetime.today())
     wiz_description = fields.Text('Description')
-    cheque_no = fields.Char(string ="Cheque no")
+    memo = fields.Char(string='Memo')
+    cheque_no = fields.Char(string="Cheque no")
     paid_by = fields.Char(string= "Paid by")
     received_by = fields.Char(string= "Received by")
     approved_by = fields.Char(string= "Paid by")
@@ -48,7 +49,7 @@ class AdvancePaymentWizard(models.TransientModel):
             # 'payment_date':self.wiz_date,
             'amount': self.amount,
             'currency_id': rec.currency_id.id,
-            'ref': self.ref,
+            'memo': self.memo,
             # 'communication': self.ref,
             'po_number': self.ref,
             'user_id': self.user_id.id,
