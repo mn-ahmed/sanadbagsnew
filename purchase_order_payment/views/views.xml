@@ -51,9 +51,17 @@
                 <field name="po_number" />
                 <field name="memo" />
             </xpath>
-            <xpath expr="//field[@name='ref']" position="attributes">
+
+<!--            For V14 1st Xpath-->
+<!--            <xpath expr="//field[@name='ref']" position="attributes">-->
+<!--                <attribute name="invisible">1</attribute>-->
+<!--            </xpath>-->
+
+<!--            For V13 2nd Xpath-->
+            <xpath expr="//field[@name='communication']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+
         </field>
     </record>
 
