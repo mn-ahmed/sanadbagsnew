@@ -54,9 +54,9 @@
                                     <field name="aprove_state_edit_check" invisible="1"/>
                                     <field name="po_confirmed" invisible="1"/>
                                     <field name="pick_confirmed" invisible="1"/>
-                                    <field name="requi_act_po" invisible="0"/>
-                                    <field name="requi_act_ip" invisible="0"/>
-                                    <field name="requi_act_ip_po" />
+                                    <field name="requi_act_po" invisible="1"/>
+                                    <field name="requi_act_ip" invisible="1"/>
+                                    <field name="requi_act_ip_po" invisible="1" />
                                     <field name="edit_pick_detail" invisible="1"  />
                                     
                                     <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
