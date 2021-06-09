@@ -2,9 +2,9 @@
 <odoo>
     <data>
        <template id="requisition_material_line_view_list" name="requisi.line.view.list" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
+            <!-- <xpath expr="." position="inside">
                 <script type="text/javascript" src="/sale_stock/static/src/js/qty_at_date_widget.js"></script>
-            </xpath>
+            </xpath> -->
         </template>
     
         <record id="material_purchase_requisition_form_view" model="ir.ui.view">
@@ -19,8 +19,10 @@
                         <button name="user_not_approve" type="object" string="Not Available" states="ir_approve" class="btn-primary" groups="material_purchase_requisitions.group_purchase_requisition_user"/>
                         <button name="request_stock" type="object" string="Create PO" attrs="{'invisible': ['|',('requi_act_po','=',False),('state','!=','approve')]}"   class="btn-primary" groups="material_purchase_requisitions.group_purchase_requisition_manager"/>
                         <button name="request_stock1" type="object" string="Create Picking" attrs="{'invisible': ['|',('requi_act_ip','=',False),('state','!=','approve')]}"     class="btn-primary" groups="material_purchase_requisitions.group_store_keeper"/>
-                     
-                        <button name="action_received" type="object"  string="Received"  class="btn-primary" groups="material_purchase_requisitions.group_create_requisition" attrs="{'invisible': [('po_confirmed','=',False),('pick_confirmed','=',False),('state','in',['draft','dept_confirm','stock','receive','ir_approve','approve','cancel','reject','picking'])]}"/>
+                         
+                         <button name="request_stock" type="object" string="Create Picking/PO" attrs="{'invisible': ['|',('requi_act_ip_po','=',False),('state','!=','approve')]}"     class="btn-primary" groups="material_purchase_requisitions.group_store_keeper , material_purchase_requisitions.group_purchase_requisition_manager"/>
+                         
+                        <button name="action_received" type="object"  string="Received"  class="btn-primary" groups="material_purchase_requisitions.group_create_requisition" attrs="{'invisible': [('po_confirmed','=',False),('pick_confirmed','=',False),('state','in',['draft','dept_confirm','stock','receive','ir_approve','approve','cancel','reject','picking','po_pick'])]}"/>
                         <button name="requisition_reject" type="object" string="Reject" groups="material_purchase_requisitions.group_purchase_requisition_department" states="dept_confirm" />
                         <button name="action_cancel" type="object" states="draft" string="Cancel" groups="material_purchase_requisitions.group_create_requisition"/>
                         <!-- <button name="reset_draft" type="object" string="Reset to Draft" states="cancel,reject,receive" class="btn-primary"/> -->
@@ -52,8 +54,9 @@
                                     <field name="aprove_state_edit_check" invisible="1"/>
                                     <field name="po_confirmed" invisible="1"/>
                                     <field name="pick_confirmed" invisible="1"/>
-                                    <field name="requi_act_po" invisible="1"/>
-                                    <field name="requi_act_ip" invisible="1"/>
+                                    <field name="requi_act_po" invisible="0"/>
+                                    <field name="requi_act_ip" invisible="0"/>
+                                    <field name="requi_act_ip_po" />
                                     <field name="edit_pick_detail" invisible="1"  />
                                     
                                     <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -92,7 +95,7 @@
                                         <field name="uom" class="oe_no_button" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
                                         <!-- <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': [('requisition_type', '!=', 'purchase')],'invisible': [('parent.state', '=', 'draft')]}" widget="many2many_tags"/>
                                          -->
-                                          <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': [('requisition_type', '!=', 'purchase')],'column_invisible':[('parent.state','=','draft')]}" widget="many2many_tags"/>
+                                          <field name="partner_id" groups="material_purchase_requisitions.group_purchase_requisition_user,purchase.group_purchase_user,material_purchase_requisitions.group_purchase_requisition_manager,material_purchase_requisitions.group_purchase_requisition_department" attrs="{'readonly': ['|',('requisition_type', '!=', 'purchase')],'column_invisible':[('parent.state','=','draft')]}" widget="many2many_tags"/>
                                     
                                     </tree>
                                 </field>

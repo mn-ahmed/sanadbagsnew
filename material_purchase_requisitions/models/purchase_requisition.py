@@ -35,6 +35,7 @@ class MaterialPurchaseRequisition(models.Model):
         ('approve', 'Approved'),
         ('stock', 'Purchase Order Created'),
         ('picking','Internal Picking Created'),
+        ('po_pick', 'PO/IP Created' ),
         ('receive', 'Received'),
         ('cancel', 'Cancelled'),
         ('reject', 'Rejected')],
@@ -198,7 +199,8 @@ class MaterialPurchaseRequisition(models.Model):
     requi_act_po= fields.Boolean('requisition action po',default= False ,compute="onchange_requistion_type_action")
     requi_act_ip= fields.Boolean('requisition action ip',default= False)
     
-    
+    requi_act_ip_po= fields.Boolean('requisition action ip/po', default= False)
+     
     
     #@api.depends('requisition_line_ids.requisition_type')
     def onchange_requistion_type_action(self):
@@ -206,22 +208,30 @@ class MaterialPurchaseRequisition(models.Model):
             rec.requi_act_po = False
             rec.requi_act_ip = False
             if rec.requisition_line_ids:
-                if rec.requisition_line_ids[0].requisition_type:
-                    if rec.requisition_line_ids[0].requisition_type == 'purchase':
-                        rec.requi_act_po = True
-    #                     rec.requisition_id.update({'requi_act_po': True})
-                    if rec.requisition_line_ids[0].requisition_type == 'internal':
-                        rec.requi_act_ip = True
-    #                     rec.requisition_id.update({'requi_act_ip': True})
-            
-    
+                requi_type_in_line = rec.requisition_line_ids.mapped('requisition_type')
+                if 'internal' in rec.requisition_line_ids.mapped('requisition_type') and 'purchase' in rec.requisition_line_ids.mapped('requisition_type'):
+                    rec.requi_act_ip_po  = True
+                else:    
+                    if rec.requisition_line_ids[0].requisition_type:
+                        if rec.requisition_line_ids[0].requisition_type == 'purchase':
+                            rec.requi_act_po = True
+        #              
+                        if rec.requisition_line_ids[0].requisition_type == 'internal':
+                            rec.requi_act_ip = True
+    #                     
+#                 for line in rec.requisition_line_ids:
+#                     if line.requisition_type:
+#                         if line.requisition_type == 'purchase':
+#                             rec.requi_act_po = True
+#                         elif line.requisition_type == 'internal':
+#                             rec.requi_act_ip = True
     
     def get_po_status(self):
         for rec in self:
             
             requi_po= rec.env['purchase.order'].search([('origin','=',rec.name)])
             requi_po_state = requi_po.filtered(lambda r:r.state == 'purchase')
-            if ((rec.env.user.has_group('material_purchase_requisitions.group_create_requisition')) and not(rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_user') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_department')) and (rec.state =='stock' or rec.state == 'picking')) :
+            if ((rec.env.user.has_group('material_purchase_requisitions.group_create_requisition')) and not(rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_user') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_department')) and (rec.state =='stock' or rec.state == 'picking' or rec.state == 'po_pick')) :
                 if len(requi_po) >= 1:
                     if len(requi_po) == len(requi_po_state):
                         rec.po_confirmed = True
@@ -237,7 +247,7 @@ class MaterialPurchaseRequisition(models.Model):
             for rec in self:
                 requi_pick= rec.env['stock.picking'].search([('origin','=',rec.name)])
                 requi_pick_state = requi_pick.filtered(lambda r:r.state == 'done')
-                if ((rec.env.user.has_group('material_purchase_requisitions.group_create_requisition')) and not(rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_user') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_department') or rec.env.user.has_group('material_purchase_requisitions.group_store_keeper'))  and (rec.state =='stock' or rec.state == 'picking')) :
+                if ((rec.env.user.has_group('material_purchase_requisitions.group_create_requisition')) and not(rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_user') or rec.env.user.has_group('material_purchase_requisitions.group_purchase_requisition_department') or rec.env.user.has_group('material_purchase_requisitions.group_store_keeper'))  and (rec.state =='stock' or rec.state == 'picking'  or rec.state == 'po_pick')) :
                     if len(requi_pick) >= 1:
                         if len(requi_pick) == len(requi_pick_state):
                             rec.pick_confirmed = True
@@ -250,28 +260,18 @@ class MaterialPurchaseRequisition(models.Model):
         except Exception as e:
             print(e) 
             raise e
-
+        
     def compute_pick_count(self):
         for rec in self:
             order_count=self.env['stock.picking'].search_count([('custom_requisition_id.id', '=', rec.id)])
             if order_count >= 1:
                 rec.picking_count = order_count
             else:
-                rec.picking_count =0
+                rec.picking_count =0  
     def compute_po_count(self):
         for rec in self:
             order_count=self.env['purchase.order'].search_count([('custom_requisition_id.id', '=', rec.id)])
-            rec.po_count = order_count
-        
-    # def compute_pick_count(self):
-    #     for rec in self:
-    #         order_count=self.env['stock.picking'].search_count([('origin', '=', rec.name)])
-    #         rec.picking_count = order_count
-    #
-    # def compute_po_count(self):
-    #     for rec in self:
-    #         order_count=self.env['purchase.order'].search_count([('origin', '=', rec.name)])
-    #         rec.po_count = order_count
+            rec.po_count = order_count 
     
     @api.model
     def create(self, vals):
@@ -305,7 +305,7 @@ class MaterialPurchaseRequisition(models.Model):
     #@api.multi
     def manager_approve(self):
         for rec in self:
-            requis = rec.requisition_line_ids.filtered(lambda r: r.requisition_type == False)
+            requis =rec.requisition_line_ids.filtered(lambda r: r.requisition_type == False)
             if requis:
                 raise UserError(_('please select requisition action!'))
             else:
@@ -323,11 +323,11 @@ class MaterialPurchaseRequisition(models.Model):
                     rec.state = 'ir_approve'
                 else:
                     rec.state = 'approve'
-                # if rec.requisition_line_ids[0].requisition_type:
-                #     if rec.requisition_line_ids[0].requisition_type == 'internal':
-                #         rec.state = 'approve'
-                #     else:
-                #         rec.state = 'ir_approve'
+#                 if rec.requisition_line_ids[0].requisition_type:
+#                     if rec.requisition_line_ids[0].requisition_type == 'internal':
+#                         rec.state = 'approve'
+#                     else:    
+#                         rec.state = 'ir_approve'
 
     #@api.multi
     def user_approve(self):
@@ -479,6 +479,9 @@ class MaterialPurchaseRequisition(models.Model):
 #                                 'account_analytic_id': rec.analytic_account_id.id,
 #                            }
                             purchase_line_obj.sudo().create(po_line_vals)
+            if rec.requi_act_ip_po == True:
+                rec.state = 'po_pick'      
+            else:        
                 rec.state = 'stock'
     
     #@api.multi
@@ -592,7 +595,7 @@ class MaterialPurchaseRequisition(models.Model):
                     rec.aprove_state_edit_check = True
                     
                     if rec.env.user.has_group('material_purchase_requisitions.group_store_keeper'):
-                        if rec.requi_act_ip == True: 
+                        if rec.requi_act_ip == True or rec.requi_act_ip_po == True: 
                             rec.edit_pick_detail = True
                         else:
                             rec.edit_pick_detail = False    

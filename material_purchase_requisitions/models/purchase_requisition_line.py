@@ -57,5 +57,21 @@ class MaterialPurchaseRequisitionLine(models.Model):
                 rec.uom = rec.product_id.uom_id.id
             
    
-
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    
+#     display_qty_widget
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     
