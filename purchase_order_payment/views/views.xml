@@ -14,7 +14,11 @@
                 />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" icon="fa-euro"  type="object" name="action_show_payments" >
+                <button name="action_show_payments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-euro"
+                        attrs="{'invisible': [('state', '!=', 'purchase')]}">
                     <field name="payment_count" string="Advance Pay" widget="statinfo"/>
                 </button>
             </xpath>
@@ -43,12 +47,12 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='journal_id']" position="after">
-                <field name="wiz_description" />
-                <field name="cheque_no" />
-                <field name="paid_by" />
-                <field name="received_by" />
-                <field name="approved_by" />
-                <field name="po_number" />
+                <field name="wiz_description" invisible="1"/>
+                <field name="cheque_no" invisible="1"/>
+                <field name="paid_by" invisible="1"/>
+                <field name="received_by" invisible="1"/>
+                <field name="approved_by" invisible="1"/>
+                <field name="po_number" invisible="1"/>
                 <field name="memo" />
             </xpath>
 
