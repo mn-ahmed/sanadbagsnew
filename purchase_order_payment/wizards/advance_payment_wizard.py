@@ -45,7 +45,7 @@ class AdvancePaymentWizard(models.TransientModel):
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
             'partner_type': 'customer',
             'partner_id': rec.partner_id.id,
-            'date':self.wiz_date,
+            'payment_date':self.wiz_date,
             # 'payment_date':self.wiz_date,
             'amount': self.amount,
             'currency_id': rec.currency_id.id,
