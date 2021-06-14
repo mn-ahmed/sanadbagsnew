@@ -7,40 +7,40 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_ref']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='date_order']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='origin']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='company_id']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='date_planned']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
 <!--            <xpath expr="//field[@name='incoterm_id']" position="attributes">-->
 <!--                <attribute name="attrs">{'invisible':[('state','=', 'merge')]}</attribute>-->
 <!--            </xpath>-->
             <xpath expr="//field[@name='user_id']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_status']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']" position="attributes">
-                <attribute name="attrs">{'readonly':[('state','=', 'merge')]}</attribute>
+                <attribute name="attrs">{'readonly':[('state','in', ['merge','purchase'])]}</attribute>
             </xpath>
         </field>
     </record>
