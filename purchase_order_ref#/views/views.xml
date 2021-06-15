@@ -1,0 +1,94 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record id="purchase_order_reference_id" model="ir.ui.view">
+          <field name="name">Purchase Ref No Hide</field>
+          <field name="model">purchase.order</field>
+          <field name="inherit_id" ref="purchase.purchase_order_form"/>
+          <field name="arch" type="xml">
+              <xpath expr="//field[@name='partner_ref']" position="attributes">
+                 <attribute name="attrs">{'invisible': [('state', 'in', ['draft','purchase'])]}</attribute>
+              </xpath>
+          </field>
+    </record>
+          <record id="changing_in_vendor_bill" model="ir.ui.view">
+          <field name="name">Changing in Vendor Bill</field>
+          <field name="model">account.move</field>
+          <field name="inherit_id" ref="account.view_move_form"/>
+          <field name="arch" type="xml">
+              <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="string">Invoice #</attribute>
+            </xpath>
+                 <xpath expr="//field[@name='ref']" position="attributes">
+                 <attribute name="class">text-uppercase</attribute>
+              </xpath>
+               <xpath expr="//field[@name='ref']" position="attributes">
+                 <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>
+              </xpath>
+          </field>
+    </record>
+<!--          <record id="add_expiry_date_field_inh" model="ir.ui.view">-->
+<!--          <field name="name">Add Field Expiry Date</field>-->
+<!--          <field name="model">product.product</field>-->
+<!--          <field name="inherit_id" ref="product.product_normal_form_view"/>-->
+<!--          <field name="arch" type="xml">-->
+<!--              <xpath expr="//field[@name='company_id']" position="after">-->
+<!--                  <field name="expiry_date"/>-->
+<!--              </xpath>-->
+<!--          </field>-->
+<!--    </record>-->
+
+<!--      <record model="ir.ui.view" id="expiry_tree_view">-->
+<!--      <field name="name">Expiry License Tree View</field>-->
+<!--      <field name="model">expiry.license</field>-->
+<!--      <field name="arch" type="xml">-->
+<!--        <tree>-->
+<!--          <field name="name"/>-->
+<!--          <field name="expire_date"/>-->
+<!--          <field name="state" widget="badge" decoration-danger="state == 'expired'" decoration-success="state == 'remain'"/>-->
+<!--        </tree>-->
+<!--      </field>-->
+<!--    </record>-->
+
+<!--      <record model="ir.ui.view" id="expiry_form_view">-->
+<!--      <field name="name">Expiry license Form View</field>-->
+<!--      <field name="model">expiry.license</field>-->
+<!--      <field name="arch" type="xml">-->
+<!--          <form>-->
+<!--              <sheet>-->
+<!--                   <group>-->
+<!--                  <group>-->
+<!--              <field name="name"/>-->
+<!--              <field name="expire_date"/>-->
+<!--              <field name="state"/>-->
+<!--              </group>-->
+<!--              </group>-->
+<!--              </sheet>-->
+<!--          </form>-->
+<!--      </field>-->
+<!--    </record>-->
+
+<!--      <record id="action_contactsy" model="ir.actions.act_window">-->
+<!--          <field name="name">Expiry License</field>-->
+<!--          <field name="type">ir.actions.act_window</field>-->
+<!--          <field name="res_model">expiry.license</field>-->
+<!--          <field name="view_mode">tree,form</field>-->
+<!--      </record>-->
+<!--      <menuitem id="menu_add_in_sale"-->
+<!--			  name="Expiry License"-->
+<!--			  parent="sale.sale_menu_root"-->
+<!--			  sequence="99"-->
+<!--			  action="attacthments.action_contactsy"/>-->
+
+<!--       <record id="ir_cron_update_attachment" model="ir.cron">-->
+<!--            <field name="name">Expire Scheduler</field>-->
+<!--            <field name="model_id" ref="model_expiry_license"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="active">1</field>-->
+<!--            <field name="code">model.compute_check_expiry()</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--        </record>-->
+
+  </data>
+</odoo>
