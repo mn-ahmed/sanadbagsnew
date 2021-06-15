@@ -17,7 +17,8 @@ class PurchaseOrderRefNoo(models.Model):
         partner_rec = self.env['account.move'].search([('partner_id', '=', self.partner_id.id), ('ref', '=', self.ref)])
         if len(partner_rec) > 1:
             if self.ref:
-                raise UserError('This Invoice number has already been used in ' + (self.ref).upper()+' Please type unique value')
+                raise UserError('This Invoice number has already been used in '+(self.name)+'/'+(self.ref).upper()+' Please type unique value')
+
 
     def name_get(self):
         res = []
@@ -54,10 +55,10 @@ class PurchaseOrderRefNoo(models.Model):
                 WHERE move.id IN %s
             ''', [tuple(moves.ids)])
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
+        print('aa', duplicated_moves.name)
         if duplicated_moves:
-            # raise ValidationError(_('This Invoice number has already been used in: %s :%s') % "".join(duplicated_moves.mapped(lambda m: "%(ref)s" % {'ref': m.ref.upper(), }, {'hhhhh' })))
             raise UserError(
-                'This Invoice number has already been used in ' + (duplicated_moves.ref).upper() + ' Please type unique value')
+                'This Invoice number has already been used in '+(duplicated_moves.name)+'/' + (duplicated_moves.ref).upper() + ' Please type unique value')
 
 
 
