@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import dateutil.utils
-from odoo.tools.misc import formatLang, format_date, get_lang
+
 from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
