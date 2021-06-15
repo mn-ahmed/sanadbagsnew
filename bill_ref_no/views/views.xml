@@ -20,8 +20,8 @@
               <xpath expr="//field[@name='ref']" position="attributes">
                 <attribute name="string">Invoice #</attribute>
             </xpath>
-                 <xpath expr="//field[@name='ref']" position="attributes">
-                 <attribute name="class">text-uppercase</attribute>
+              <xpath expr="//field[@name='ref']" position="attributes">
+                  <attribute name="class">text-uppercase</attribute>
               </xpath>
                <xpath expr="//field[@name='ref']" position="attributes">
                  <attribute name="attrs">{'readonly': [('state', '=', 'posted')]}</attribute>

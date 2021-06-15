@@ -12,8 +12,14 @@ class PurchaseOrderRefNoo(models.Model):
     _inherit = 'account.move'
     _rec_name = 'name'
 
+    @api.onchange('ref')
+    def set_upper(self):
+        if self.ref:
+            self.ref = str(self.ref).upper()
+
     @api.constrains('ref')
     def unique_ref_no(self):
+        print(self.ref)
         partner_rec = self.env['account.move'].search([('partner_id', '=', self.partner_id.id), ('ref', '=', self.ref)])
         if len(partner_rec) > 1:
             if self.ref:
