@@ -5,22 +5,22 @@ from odoo.exceptions import UserError, ValidationError
 class VendorBill(models.Model):
     _inherit = 'account.move'
 
-    @api.model
-    def create(self, vals):
-        purchase_order = self.env['purchase.order'].search([('id', '=', vals['purchase_id'])])
-        if purchase_order:
-            total_qty = 0
-            total_invoice_qty = 0
-            purchase_invoices = self.env['account.move'].search([('purchase_id', '=', purchase_order.id),('state', '=', 'posted')])
-            if purchase_invoices:
-                for rec in purchase_invoices.invoice_line_ids:
-                    total_invoice_qty = total_invoice_qty + rec.quantity
-            for line in purchase_order.order_line:
-                total_qty = total_qty + line.qty_received
-            if total_invoice_qty != total_qty:
-                raise UserError(_('Billed Quantity Should Not Be Changed'))
-        res= super(VendorBill,self).create(vals)
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     purchase_order = self.env['purchase.order'].search([('id', '=', vals['purchase_id'])])
+    #     if purchase_order:
+    #         total_qty = 0
+    #         total_invoice_qty = 0
+    #         purchase_invoices = self.env['account.move'].search([('purchase_id', '=', purchase_order.id),('state', '=', 'posted')])
+    #         if purchase_invoices:
+    #             for rec in purchase_invoices.invoice_line_ids:
+    #                 total_invoice_qty = total_invoice_qty + rec.quantity
+    #         for line in purchase_order.order_line:
+    #             total_qty = total_qty + line.qty_received
+    #         if total_invoice_qty != total_qty:
+    #             raise UserError(_('Billed Quantity Should Not Be Changed'))
+    #     res= super(VendorBill,self).create(vals)
+    #     return res
 
 
     # @api.model
