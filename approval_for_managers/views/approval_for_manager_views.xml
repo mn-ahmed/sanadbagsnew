@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+             <field name="name">view.purchase.order.form.inherit</field>
+             <field name="model">purchase.order</field>
+             <field name="inherit_id" ref="purchase.purchase_order_form"/>
+             <field name="arch" type="xml">
+
+                 <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+                     <button name="button_approve"
+                             type="object"
+                             states="approve"
+                             string="Approve"
+                             class="oe_highlight"
+                             groups="purchase.group_purchase_manager"/>
+                 </xpath>
+
+                 <xpath expr="//header//button[@name='button_confirm']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="purchase.group_purchase_manager"/>
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='button_draft']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'not in', ['reject'])]}</attribute>
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='button_cancel']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'not in', ['draft','to approve','sent','purchase','approve','reject'])]}</attribute>
+                 </xpath>
+
+            </field>
+         </record>
+        
+        <record id="view_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">view.sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header/button[@name='action_quotation_send']" position="after">
+                    <button name="button_approve"
+                            type="object"
+                            states="approve"
+                            string="Approve"
+                            class="oe_highlight"
+                            groups="sales_team.group_sale_manager"
+                    />
+                </xpath>
+
+                <xpath expr="//header//button[@name='action_confirm']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="sales_team.group_sale_manager"
+                     />
+                </xpath>
+
+                <xpath expr="//header//button[@name='action_cancel']" position="after">
+                     <button name="action_drafts"
+                             type="object"
+                             states="reject"
+                             string="Set To Quotation"
+                     />
+                 </xpath>
+
+                <xpath expr="//header/button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_cancel']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'not in', ['draft', 'sent', 'sale','approve'])]}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_mrp_production_form_inherit" model="ir.ui.view">
+            <field name="name">view.mrp.production.form.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_assign']" position="after">
+                    <button name="button_approve"
+                            type="object"
+                            states="approve"
+                            string="Approve"
+                            class="oe_highlight"
+                            groups="mrp.group_mrp_manager"
+                    />
+                </xpath>
+
+                <xpath expr="//header//button[@name='button_scrap']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="mrp.group_mrp_manager"
+                     />
+                </xpath>
+
+                <xpath expr="//header//button[@name='button_scrap']" position="after">
+                     <button name="action_set_to_draft"
+                             type="object"
+                             states="reject"
+                             string="Set To Draft"
+                             class="oe_highlight"
+                             groups="mrp.group_mrp_manager"
+                     />
+                </xpath>
+
+                <xpath expr="//header//button[@name='button_scrap']" position="after">
+                     <button name="action_button_plan"
+                             type="object"
+                             states="confirmed"
+                             string="Plan"
+                             class="oe_highlight"
+                             groups="mrp.group_mrp_manager"
+                     />
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_assign']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'in', ['approve', 'reject', 'cancel', 'done', 'draft'])]}</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='button_scrap']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'in', ['approve', 'reject', 'cancel', 'draft'])]}</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_cancel']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'in', ['reject', 'cancel', 'done'])]}</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_toggle_is_locked']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'in', ['approve', 'reject', 'cancel', 'draft'])]}</attribute>
+                </xpath>
+
+                <xpath expr="//header/button[@name='button_unreserve']" position="attributes">
+                     <attribute name="attrs">{'invisible': [('state', 'in', ['approve', 'reject', 'cancel', 'done', 'draft'])]}</attribute>
+                </xpath>
+
+<!--                <xpath expr="//header/button[@name='button_plan']" position="attributes">-->
+<!--                     <attribute name="attrs">{'invisible': ['|', '|', ('is_check_availability', '!=', True), ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}</attribute>-->
+<!--                </xpath>-->
+
+                <xpath expr="//header/button[@name='button_plan']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//sheet/field[@name='unreserve_visible']" position="after">
+                     <field name="is_check_availability" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_account_move_form_inherit" model="ir.ui.view">
+             <field name="name">view.account.move.form.inherit</field>
+             <field name="model">account.move</field>
+             <field name="inherit_id" ref="account.view_move_form"/>
+             <field name="arch" type="xml">
+
+                 <xpath expr="//header/button[@name='action_post']" position="after">
+                     <button name="button_approve"
+                             type="object"
+                             states="approve"
+                             string="Approve"
+                             class="oe_highlight"
+                             groups="account.group_account_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header//button[@name='button_draft']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="account.group_account_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='preview_invoice']" position="attributes">
+                     <attribute name="attrs">{'invisible': ['|', ('state', 'in', ['approve']),('type', 'not in', ('out_invoice', 'out_refund'))]}</attribute>
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='button_draft']" position="attributes">
+                     <attribute name="attrs">{'invisible' : ['|', ('restrict_mode_hash_table', '=', True), ('state', 'not in', ('posted', 'cancel','reject'))]}</attribute>
+                 </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_account_payment_form_inherit" model="ir.ui.view">
+             <field name="name">view.account.payment.form.inherit</field>
+             <field name="model">account.payment</field>
+             <field name="inherit_id" ref="account.view_account_payment_form"/>
+             <field name="arch" type="xml">
+
+                 <xpath expr="//header/button[@name='post']" position="after">
+                     <button name="button_approve"
+                             type="object"
+                             states="approve"
+                             string="Approve"
+                             class="oe_highlight"
+                             groups="account.group_account_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header//button[@name='action_draft']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="account.group_account_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header//button[@name='action_draft']" position="after">
+                     <button name="action_post"
+                             type="object"
+                             states="draft"
+                             string="post"
+                             class="oe_highlight"
+                             groups="account.group_account_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='action_draft']" position="attributes">
+                     <attribute name="attrs">{'invisible' : [('state', 'in', ('draft', 'approve'))]}</attribute>
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='post']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
