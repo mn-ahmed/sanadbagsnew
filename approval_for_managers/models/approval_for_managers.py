@@ -25,8 +25,22 @@ class PurchaseOrderInh(models.Model):
             'state': 'approve'
         })
 
-    def button_approve(self):
-        rec = super(PurchaseOrderInh, self).button_confirm()
+    def button_approved(self):
+        for order in self:
+            if order.state not in ['draft', 'sent','approve']:
+                continue
+            order._add_supplier_to_product()
+            # Deal with double validation process
+            if order.company_id.po_double_validation == 'one_step'\
+                    or (order.company_id.po_double_validation == 'two_step'\
+                        and order.amount_total < self.env.company.currency_id._convert(
+                            order.company_id.po_double_validation_amount, order.currency_id, order.company_id, order.date_order or fields.Date.today()))\
+                    or order.user_has_groups('purchase.group_purchase_manager'):
+                order.button_approve()
+            else:
+                order.write({'state': 'to approve'})
+        return True
+        # rec = super(PurchaseOrderInh, self).button_confirm()
 
     def button_reject(self):
         self.write({
@@ -80,6 +94,7 @@ class SaleOrderInh(models.Model):
 class MRPProductionInh(models.Model):
     _inherit = 'mrp.production'
 
+
     is_check_availability = fields.Boolean(string='Check Availability', default=False)
 
     state = fields.Selection([
@@ -107,6 +122,7 @@ class MRPProductionInh(models.Model):
             'state': 'approve'
         })
 
+
     def action_assign(self):
         res = super(MRPProductionInh, self).action_assign()
         if self.move_raw_ids:
@@ -114,8 +130,7 @@ class MRPProductionInh(models.Model):
                 if rec.product_uom_qty == rec.reserved_availability:
                     if self.is_check_availability == False:
                         self.is_check_availability = True
-                else:
-                    raise UserError(_('Reserve Quantity Should Be Equal To To-Consume'))
+
         return res
 
 
@@ -123,6 +138,7 @@ class MRPProductionInh(models.Model):
         self.write({
             'state': 'draft'
         })
+
 
     def button_approve(self):
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'approve')
@@ -134,13 +150,16 @@ class MRPProductionInh(models.Model):
             order._plan_workorders()
         return True
 
+
     def button_reject(self):
         self.write({
             'state': 'reject'
         })
 
+
 class AccountMoveInh(models.Model):
     _inherit = 'account.move'
+
 
     state = fields.Selection(selection=[
         ('draft', 'Draft'),
@@ -158,9 +177,6 @@ class AccountMoveInh(models.Model):
 
     def button_approve(self):
         rec = super(AccountMoveInh, self).action_post()
-        # self.write({
-        #     'state': 'posted'
-        # })
 
     def button_reject(self):
         self.write({
@@ -237,12 +253,51 @@ class AccountPaymentInh(models.Model):
         return True
 
 
+    def button_reject(self):
+        self.write({
+            'state': 'reject'
+        })
 
 
-        # rec = super(AccountPaymentInh, self).post()
-        # self.write({
-        #     'state': 'posted'
-        # })
+
+class StockPickingInh(models.Model):
+    _inherit = 'stock.picking'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Another Operation'),
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('approve', 'Waiting For Approval'),
+        ('done', 'Done'),
+        ('reject', 'Reject'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state', copy=False,
+        index=True, readonly=True, store=True, tracking=True,
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Done: The transfer has been processed.\n"
+             " * Cancelled: The transfer has been cancelled.")
+
+    def button_validate(self):
+        if self.picking_type_id.code == 'internal':
+            self.write({
+                'state': 'approve'
+            })
+        else:
+            rec = super(StockPickingInh, self).button_validate()
+            return rec
+
+    # def action_validate(self):
+    #     self.write({
+    #         'state': 'approve'
+    #     })
+
+    def button_approved(self):
+            rec = super(StockPickingInh, self).button_validate()
+            return rec
 
     def button_reject(self):
         self.write({

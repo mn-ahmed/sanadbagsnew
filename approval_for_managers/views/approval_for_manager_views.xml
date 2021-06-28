@@ -8,7 +8,7 @@
              <field name="arch" type="xml">
 
                  <xpath expr="//header/button[@name='action_rfq_send']" position="after">
-                     <button name="button_approve"
+                     <button name="button_approved"
                              type="object"
                              states="approve"
                              string="Approve"
@@ -123,6 +123,7 @@
                              string="Plan"
                              class="oe_highlight"
                              groups="mrp.group_mrp_manager"
+                             attrs="{'invisible': ['|', '|', ('is_check_availability', '!=', True)]}"
                      />
                 </xpath>
 
@@ -145,10 +146,6 @@
                 <xpath expr="//header/button[@name='button_unreserve']" position="attributes">
                      <attribute name="attrs">{'invisible': [('state', 'in', ['approve', 'reject', 'cancel', 'done', 'draft'])]}</attribute>
                 </xpath>
-
-<!--                <xpath expr="//header/button[@name='button_plan']" position="attributes">-->
-<!--                     <attribute name="attrs">{'invisible': ['|', '|', ('is_check_availability', '!=', True), ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}</attribute>-->
-<!--                </xpath>-->
 
                 <xpath expr="//header/button[@name='button_plan']" position="attributes">
                      <attribute name="invisible">1</attribute>
@@ -241,6 +238,50 @@
                  <xpath expr="//header/button[@name='post']" position="attributes">
                      <attribute name="invisible">1</attribute>
                  </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_stock_picking_form_inherit" model="ir.ui.view">
+             <field name="name">view.stock.picking.form.inherit</field>
+             <field name="model">stock.picking</field>
+             <field name="inherit_id" ref="stock.view_picking_form"/>
+             <field name="arch" type="xml">
+
+                 <xpath expr="//header/button[@name='action_confirm']" position="after">
+                     <button name="button_approved"
+                             type="object"
+                             states="approve"
+                             string="Approve"
+                             class="oe_highlight"
+                             groups="stock.group_stock_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header//button[@name='button_scrap']" position="after">
+                     <button name="button_reject"
+                             type="object"
+                             states="approve"
+                             string="Reject"
+                             class="oe_highlight"
+                             groups="stock.group_stock_manager"
+                     />
+                 </xpath>
+
+                 <xpath expr="//header/button[5]" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+                 <xpath expr="//header/button[@name='action_toggle_is_locked']" position="attributes">
+                     <attribute name="attrs">{'invisible': ['|', ('state', 'in', ('draft', 'approve', 'cancel')), ('is_locked', '=', False)]}</attribute>
+                 </xpath>
+
+<!--                 <xpath expr="//header/button[@name='button_scrap']" position="attributes">-->
+<!--                     <attribute name="attrs">{'invisible': ['|', '|', '&amp;', ('picking_type_code', '=', 'incoming'),-->
+<!--                         ('state', '!=', 'done', 'approve'), '&amp;',-->
+<!--                         ('picking_type_code', '=', 'outgoing'),-->
+<!--                         ('state', '=', 'done', 'approve'), ('is_locked', '=', False)]}</attribute>-->
+<!--                 </xpath>-->
 
             </field>
         </record>
